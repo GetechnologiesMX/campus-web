@@ -341,7 +341,7 @@ async function create() {
   min-width: 0;
 }
 
-* + .fields {
+.fields:not(:first-child) {
   margin-top: 20px;
 }
 
