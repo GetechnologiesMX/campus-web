@@ -129,7 +129,7 @@ h3 {
   padding: 3px 10px;
   border-radius: 999px;
   background: var(--ui-color-primary-100);
-  color: var(--ui-primary);
+  color: var(--brand-text);
   font-size: 0.8rem;
   font-weight: 600;
 }

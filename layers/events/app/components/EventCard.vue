@@ -42,7 +42,7 @@ defineProps<{
   height: 72px;
   border-radius: var(--brand-radius-sm);
   background: var(--ui-color-primary-100);
-  color: var(--ui-primary);
+  color: var(--brand-text);
 }
 
 .day {

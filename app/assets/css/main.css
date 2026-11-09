@@ -2,53 +2,130 @@
 @import "@nuxt/ui";
 
 /*
- * Theme palettes, taken from mccorp.com.mx. Nuxt UI maps them to its
- * primary / neutral colors in app.config.ts and derives every --ui-* token
- * (text, backgrounds, borders) from them.
+ * DM Sans, the compliance-v2 font (SIL Open Font License). The files live in
+ * public/theme/fonts, shared with the Open edX MFEs (public/theme/campus-paragon.css).
+ */
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/theme/fonts/dm-sans/DMSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/theme/fonts/dm-sans/DMSans-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/theme/fonts/dm-sans/DMSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/theme/fonts/dm-sans/DMSans-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/theme/fonts/dm-sans/DMSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/theme/fonts/dm-sans/DMSans-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/*
+ * Theme palettes, from the compliance-v2 theme (tema-compliance.css; the
+ * variable each pinned value comes from is noted next to it). Nuxt UI maps
+ * them to its primary / neutral colors in app.config.ts and derives every
+ * --ui-* token (text, backgrounds, borders) from them.
+ * The Open edX MFEs use the same colors: public/theme/campus-paragon.css and
+ * tutor-plugins/campusmenu.py (header and footer) in plataforma-equipo.
  */
 @theme static {
-  /* Inter is self-hosted by @nuxt/fonts, which Nuxt UI installs. */
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
 
-  /* 500 = MCCorp primary blue, 600 = its hover / dark blue. */
-  --color-brand-50: #f0f5fe;
-  --color-brand-100: #e6effb;
-  --color-brand-200: #c8dcf8;
-  --color-brand-300: #9cc0f2;
-  --color-brand-400: #5f97e8;
-  --color-brand-500: #0f5dd8;
-  --color-brand-600: #024db3;
-  --color-brand-700: #033f91;
-  --color-brand-800: #083676;
-  --color-brand-900: #0c2f62;
-  --color-brand-950: #091d40;
+  /* Gold. 500 = --color-primary, decorative only: white text on it, or it as
+     text on white, reads at 3.57:1 (below WCAG AA). 600 is the UI primary
+     (--ui-primary below: buttons, focus, active items, primary text), 5.2:1
+     on white; the MFEs use the same value (public/theme/campus-paragon.css). */
+  --color-brand-50: #f5f3f1; /* --color-primary-surface */
+  --color-brand-100: #ede9e4;
+  --color-brand-200: #e5e0da; /* --color-primary-soft */
+  --color-brand-300: #cdc2b3;
+  --color-brand-400: #b19f89; /* --color-primary-chip-bg */
+  --color-brand-500: #9b8467; /* --color-primary */
+  --color-brand-600: #7c6a52;
+  --color-brand-700: #6c5c48;
+  --color-brand-800: #554939;
+  --color-brand-900: #41372b;
+  --color-brand-950: #2b251d;
 
-  /* MCCorp's cool grays: 50 page background, 500 muted text, 800 headings. */
-  --color-graphite-50: #f7f7f7;
-  --color-graphite-100: #eeeff0;
-  --color-graphite-200: #dfe2e4;
-  --color-graphite-300: #c6c9cb;
-  --color-graphite-400: #9ea2a7;
-  --color-graphite-500: #6f7071;
-  --color-graphite-600: #55585a;
-  --color-graphite-700: #3d4042;
-  --color-graphite-800: #262828;
-  --color-graphite-900: #171819;
-  --color-graphite-950: #0d0e0e;
+  /* Neutrals. Nuxt UI: 50 page background, 200 borders, 400 dimmed text,
+     500 muted text, 700 body text, 800 headings (--ui-text-highlighted). */
+  --color-ink-50: #f8f7f6; /* --color-bg-page */
+  --color-ink-100: #f1f4f7; /* --color-secondary-bg */
+  --color-ink-200: #e8e9ea; /* --color-border-table */
+  --color-ink-300: #bac7d5; /* --color-border-input */
+  --color-ink-400: #8b909a; /* --color-text-muted */
+  --color-ink-500: #606060; /* --color-text-navigation */
+  --color-ink-600: #555555; /* --color-text-body */
+  --color-ink-700: #383838; /* --header-avatar-bg */
+  --color-ink-800: #252a31; /* --color-text-primary */
+  --color-ink-900: #101010; /* --color-text-strong */
+  --color-ink-950: #06090f; /* --color-secondary */
 }
 
 :root {
+  /* Nuxt UI uses 500; 600 keeps white text on buttons above 4.5:1. */
+  --ui-primary: var(--ui-color-primary-600);
   --ui-text-highlighted: var(--ui-color-neutral-800);
-  --ui-radius: 0.375rem;
+  --ui-radius: 0.375rem; /* --radius-md, buttons */
   --ui-container: 1120px;
 
   /* Brand extras with no Nuxt UI equivalent. */
-  /* Decorative only (gradients, glows): too light for small text on white. */
-  --brand-accent: #057cd8;
-  --gradient-brand: linear-gradient(180deg, #014db3 0%, #057cd8 100%);
+  /* Links (--color-accent): the gold is too light for text. */
+  --brand-link: #0a19cd;
+  --brand-link-hover: #0814a4;
+  /* Gold as text: on white or primary-50 use --ui-primary; on primary-100
+     or darker tints (badges, active items) use this one. */
+  --brand-text: var(--ui-color-primary-700);
+  /* Decorative only (gradients, glows). */
+  --brand-accent: var(--ui-color-primary-400);
+  /* White text goes on it: both ends stay above 4.5:1. */
+  --gradient-brand: linear-gradient(180deg, var(--ui-color-primary-700) 0%, var(--ui-color-primary-600) 100%);
   --brand-radius: 12px;
-  --brand-radius-sm: 8px;
-  --brand-shadow: 0 1px 2px rgb(38 40 40 / 6%), 0 4px 16px rgb(38 40 40 / 6%);
+  --brand-radius-sm: 8px; /* --radius-lg */
+  --brand-shadow: 0 1px 2px rgb(37 42 49 / 6%), 0 4px 16px rgb(37 42 49 / 6%);
+
+  /* Header and footer, the same as the MFEs' (tutor-plugins/campusmenu.py). */
+  --header-bg: #fff; /* --header-bg */
+  --header-border: #e6eff5; /* --header-border */
+  --header-text: var(--ui-color-neutral-900); /* --color-text-strong */
+  --header-link: var(--ui-color-neutral-500); /* --color-text-navigation */
+  --header-hover: var(--ui-color-neutral-50); /* --menu-item-active-bg */
+  --header-control-border: var(--ui-color-neutral-300); /* --color-border-input */
+  --footer-bg: #f9fafb; /* --footer-bg */
+  --footer-text: var(--ui-color-neutral-600); /* --color-text-body */
 }
 
 /* Element defaults live in the base layer so Nuxt UI's utilities can override them. */
@@ -64,7 +141,11 @@
   }
 
   a {
-    color: var(--ui-primary);
+    color: var(--brand-link);
+  }
+
+  a:hover {
+    color: var(--brand-link-hover);
   }
 
   h1,
@@ -151,7 +232,7 @@
   gap: 8px;
   padding: 12px 22px;
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--ui-radius);
   font: inherit;
   font-weight: 600;
   text-decoration: none;
@@ -165,7 +246,7 @@
 }
 
 .btn-primary:hover {
-  background: var(--ui-color-primary-600);
+  background: var(--ui-color-primary-700);
 }
 
 .btn-secondary {
@@ -203,7 +284,7 @@
   font-size: 0.8rem;
   font-weight: 600;
   background: var(--ui-color-primary-100);
-  color: var(--ui-primary);
+  color: var(--brand-text);
 }
 
 .notice {
@@ -223,8 +304,8 @@
 }
 
 .notice-info {
-  background: var(--ui-color-primary-100);
-  color: var(--ui-primary);
+  background: var(--ui-color-primary-50);
+  color: var(--ui-color-primary-800);
 }
 
 .prose {

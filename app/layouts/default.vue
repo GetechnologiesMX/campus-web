@@ -169,11 +169,11 @@ main {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--ui-color-neutral-800);
-  border-bottom: 1px solid var(--ui-color-neutral-700);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
 }
 
-/* Same metrics as the Open edX MFE headers (tutor-plugins/campusmenu.py). */
+/* Same colors and metrics as the Open edX MFE headers (tutor-plugins/campusmenu.py). */
 .header-inner {
   display: flex;
   align-items: center;
@@ -199,7 +199,7 @@ main {
 }
 
 .nav a {
-  color: #fff;
+  color: var(--header-link);
   text-decoration: none;
   font-weight: 500;
 }
@@ -209,11 +209,13 @@ main {
 }
 
 .nav > a:hover {
-  border-bottom-color: var(--ui-color-primary-300);
+  color: var(--header-text);
+  border-bottom-color: var(--ui-primary);
 }
 
 .nav > a.router-link-active {
-  color: var(--ui-color-primary-300);
+  color: var(--header-text);
+  border-bottom-color: var(--ui-primary);
 }
 
 .nav.open {
@@ -225,8 +227,8 @@ main {
   left: 0;
   right: 0;
   padding: 20px 16px 24px;
-  background: var(--ui-color-neutral-800);
-  border-bottom: 1px solid var(--ui-color-neutral-700);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
 }
 
 .nav-account {
@@ -254,10 +256,10 @@ main {
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid var(--header-control-border);
   border-radius: var(--ui-radius);
   background: transparent;
-  color: #fff;
+  color: var(--header-text);
   font: inherit;
   font-weight: 500;
   cursor: pointer;
@@ -265,7 +267,7 @@ main {
 
 .user-menu-toggle:hover,
 .user-menu-toggle[aria-expanded="true"] {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--header-hover);
 }
 
 .user-menu-content {
@@ -276,17 +278,17 @@ main {
 
 .user-menu-content a {
   padding: 10px 0;
-  color: #fff;
+  color: var(--header-link);
   text-decoration: none;
   font-weight: 500;
 }
 
 .menu-toggle {
   padding: 8px 14px;
-  border: 1px solid var(--ui-color-neutral-600);
+  border: 1px solid var(--header-control-border);
   border-radius: 999px;
   background: transparent;
-  color: #fff;
+  color: var(--header-text);
   font: inherit;
   font-weight: 500;
   cursor: pointer;
@@ -347,13 +349,13 @@ main {
   }
 }
 
-/* Same background as the header. */
+/* Same colors as the Open edX MFE footer (tutor-plugins/campusmenu.py). */
 .site-footer {
   margin-top: 56px;
   padding: 48px 0 24px;
-  background: var(--ui-color-neutral-800);
-  border-top: 1px solid var(--ui-color-neutral-700);
-  color: var(--ui-color-neutral-300);
+  background: var(--footer-bg);
+  border-top: 1px solid var(--header-border);
+  color: var(--footer-text);
 }
 
 .footer-grid {
@@ -381,7 +383,7 @@ main {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--ui-text-highlighted);
 }
 
 .footer-list {
@@ -395,12 +397,13 @@ main {
 }
 
 .site-footer a {
-  color: var(--ui-color-neutral-300);
+  color: var(--footer-text);
   text-decoration: none;
 }
 
 .site-footer a:hover {
-  color: var(--ui-color-primary-300);
+  color: var(--brand-link);
+  text-decoration: underline;
 }
 
 .footer-map-link {
@@ -413,16 +416,16 @@ main {
   display: block;
   width: 100%;
   height: 200px;
-  border: 1px solid var(--ui-color-neutral-700);
+  border: 1px solid var(--header-border);
   border-radius: var(--ui-radius);
 }
 
 .footer-bottom {
   margin-top: 40px;
   padding-top: 20px;
-  border-top: 1px solid var(--ui-color-neutral-700);
+  border-top: 1px solid var(--header-border);
   font-size: 0.875rem;
-  color: var(--ui-color-neutral-400);
+  color: var(--ui-color-neutral-500);
 }
 
 @media (min-width: 640px) {

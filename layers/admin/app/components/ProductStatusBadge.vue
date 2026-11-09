@@ -24,7 +24,7 @@ const label = computed(() => PRODUCT_STATUS[props.status].label)
 
 .status-created {
   background: var(--ui-color-primary-100);
-  color: var(--ui-color-primary-700);
+  color: var(--brand-text);
 }
 
 .status-on_sale {

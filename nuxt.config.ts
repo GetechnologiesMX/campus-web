@@ -41,6 +41,12 @@ export default defineNuxtConfig({
     },
   },
 
+  routeRules: {
+    // Theme of the Open edX MFEs (public/theme/campus-paragon.css). They run on
+    // another host, and browsers only load cross-origin fonts with CORS.
+    '/theme/**': { headers: { 'access-control-allow-origin': '*' } },
+  },
+
   content: {
     // Node >= 22.5 ships SQLite, so no native module is needed.
     experimental: { sqliteConnector: 'native' },

@@ -78,7 +78,7 @@ function applyCustom() {
 .chip[aria-pressed='true'] {
   border-color: var(--ui-primary);
   background: var(--ui-color-primary-100);
-  color: var(--ui-primary);
+  color: var(--brand-text);
 }
 
 .custom input {

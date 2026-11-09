@@ -1,0 +1,174 @@
+/*
+ * Campus theme for the Open edX MFEs (Paragon design tokens).
+ *
+ * Loaded by every MFE right after tutor-indigo's light theme, as its
+ * `brandOverride` (tutor-plugins/campustheme.py in plataforma-equipo), so it
+ * only has to redefine what Campus changes; anything not set here keeps
+ * Indigo's value. Served by this site at /theme/campus-paragon.css; the MFEs
+ * live on another host, so /theme/** is sent with CORS headers
+ * (routeRules in nuxt.config.ts) for the fonts to load.
+ *
+ * Changing it needs no MFE rebuild: reload the MFE (in dev/qa/prod, deploy
+ * campus-web first).
+ *
+ * Colors come from the compliance-v2 theme (tema-compliance.css); the
+ * variable each value comes from is noted next to it.
+ *
+ * Paragon ships each scale as precomputed hex values (it does not derive
+ * 100…900 from -base), so every shade is set. They follow Paragon's own
+ * recipe: 100/200/300/400 mix the base with 94/75/50/25 % white and
+ * 600/700/800/900 with 10/20/25/30 % black. Tokens Indigo hardcodes as a
+ * translucent base are rebuilt with color-mix() so they follow -base.
+ *
+ * `html:root` (not `:root`): the MFE bundle may add Paragon's core CSS after
+ * this file, and core defines the font tokens too.
+ */
+
+/* DM Sans, the compliance-v2 font (SIL Open Font License). */
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/dm-sans/DMSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/dm-sans/DMSans-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/dm-sans/DMSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/dm-sans/DMSans-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/dm-sans/DMSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('fonts/dm-sans/DMSans-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+html:root {
+  /* Typography (--font-family-base). */
+  --pgn-typography-font-family-sans-serif: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Text: page titles, labels, table cells (--color-text-primary). */
+  --pgn-color-body-base: #252a31;
+  --pgn-color-headings-base: #252a31;
+
+  /* Primary: buttons, checkboxes, focus, active tabs, progress.
+     -base is a darker --color-primary (#9b8467): white text on the gold is
+     3.57:1, on #7c6a52 it is 5.2:1 (WCAG AA). Tints 100…400 stay on the gold;
+     shades 600…900 derive from -base. 700 = hover, 900 = pressed.
+     Same value as --ui-primary on the public site (main.css). */
+  --pgn-color-primary-base: #7c6a52;
+  --pgn-color-primary-light: #f5f3f1; /* --color-primary-surface */
+  --pgn-color-primary-100: #f9f8f6;
+  --pgn-color-primary-200: #e5e0da; /* --color-primary-soft */
+  --pgn-color-primary-300: #cdc2b3;
+  --pgn-color-primary-400: #b19f89; /* --color-primary-chip-bg */
+  --pgn-color-primary-600: #705f4a;
+  --pgn-color-primary-700: #635542;
+  --pgn-color-primary-800: #5d503e;
+  --pgn-color-primary-900: #574a39;
+
+  /* Brand: `variant="brand"` buttons and badges (Indigo's is magenta). The
+     compliance theme has one main button color, so brand repeats primary. */
+  --pgn-color-brand-base: var(--pgn-color-primary-base);
+  --pgn-color-brand-100: var(--pgn-color-primary-100);
+  --pgn-color-brand-200: var(--pgn-color-primary-200);
+  --pgn-color-brand-300: var(--pgn-color-primary-300);
+  --pgn-color-brand-400: var(--pgn-color-primary-400);
+  --pgn-color-brand-600: var(--pgn-color-primary-600);
+  --pgn-color-brand-700: var(--pgn-color-primary-700);
+  --pgn-color-brand-800: var(--pgn-color-primary-800);
+  --pgn-color-brand-900: var(--pgn-color-primary-900);
+
+  /* Links (--color-accent, blue): the gold is too light for text on white
+     (3.57:1), the accent reads at 10.3:1. Paragon uses `info` (teal) for
+     plain links and primary for muted ones; all of them go to the accent. */
+  --campus-link: #0a19cd;
+  --campus-link-hover: #0814a4; /* accent + 20 % black */
+  --campus-link-decoration: color-mix(in srgb, var(--campus-link) 30%, transparent);
+  --pgn-color-link-base: var(--campus-link);
+  --pgn-color-link-inline-base: var(--campus-link);
+  --pgn-color-link-hover: var(--campus-link-hover);
+  --pgn-color-link-inline-hover-base: var(--campus-link-hover);
+  --pgn-color-link-inline-hover-decoration: var(--campus-link-hover);
+  --pgn-color-link-inline-decoration: var(--campus-link-decoration);
+  --pgn-color-link-muted-base: var(--campus-link);
+  --pgn-color-link-muted-inline-base: var(--campus-link);
+  --pgn-color-link-muted-hover: var(--campus-link-hover);
+  --pgn-color-link-muted-inline-hover-base: var(--campus-link-hover);
+  --pgn-color-link-muted-inline-hover-decoration: var(--campus-link-hover);
+  --pgn-color-link-muted-inline-decoration: var(--campus-link-decoration);
+  --pgn-color-link-brand-base: var(--campus-link);
+  --pgn-color-link-brand-inline-base: var(--campus-link);
+  --pgn-color-link-brand-hover: var(--campus-link-hover);
+  --pgn-color-link-brand-inline-hover-base: var(--campus-link-hover);
+  --pgn-color-link-brand-inline-hover-decoration: var(--campus-link-hover);
+  --pgn-color-link-brand-inline-decoration: var(--campus-link-decoration);
+
+  /* Success (--color-success). White text on it is 2.67:1: Paragon uses it
+     for icons and borders; avoid it as a button background. */
+  --pgn-color-success-base: #01b574;
+  --pgn-color-success-100: #f0fbf7;
+  --pgn-color-success-200: #c0ecdc;
+  --pgn-color-success-300: #80daba;
+  --pgn-color-success-400: #40c897;
+  --pgn-color-success-600: #01a368;
+  --pgn-color-success-700: #01915d;
+  --pgn-color-success-800: #018857;
+  --pgn-color-success-900: #017f51;
+
+  /* Danger (--color-error, form errors). */
+  --pgn-color-danger-base: #ba1a1a;
+  --pgn-color-danger-100: #fbf1f1;
+  --pgn-color-danger-200: #eec6c6;
+  --pgn-color-danger-300: #dc8c8c;
+  --pgn-color-danger-400: #cb5353;
+  --pgn-color-danger-600: #a71717;
+  --pgn-color-danger-700: #951515;
+  --pgn-color-danger-800: #8c1414;
+  --pgn-color-danger-900: #821212;
+
+  /* Warning (--color-warning). Paragon puts dark text on it. */
+  --pgn-color-warning-base: #eaa300;
+  --pgn-color-warning-100: #fef9f0;
+  --pgn-color-warning-200: #fae8bf;
+  --pgn-color-warning-300: #f4d180;
+  --pgn-color-warning-400: #efba40;
+  --pgn-color-warning-600: #d39300;
+  --pgn-color-warning-700: #bb8200;
+  --pgn-color-warning-800: #b07a00;
+  --pgn-color-warning-900: #a47200;
+
+  /* Indigo hardcodes these as its primary with alpha. */
+  --pgn-color-form-control-indicator-checked-bg-disabled: color-mix(in srgb, var(--pgn-color-primary-base) 50%, transparent);
+  --pgn-color-badge-focus-box-shadow-primary: color-mix(in srgb, var(--pgn-color-primary-base) 5%, transparent);
+}
