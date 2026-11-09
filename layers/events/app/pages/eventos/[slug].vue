@@ -265,7 +265,7 @@ h1 {
 .body :deep(th) {
   background: var(--ui-color-primary-100);
   font-size: 0.85rem;
-  color: var(--ui-primary);
+  color: var(--brand-text);
 }
 
 .body :deep(td:first-child) {

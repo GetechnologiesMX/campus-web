@@ -210,7 +210,7 @@ const narrowed = computed(() => !!search.value.trim() || filter.value !== 'all')
   overflow: hidden;
   border-radius: var(--brand-radius-sm);
   background: linear-gradient(135deg, var(--ui-color-primary-100), var(--ui-color-primary-50));
-  color: var(--ui-primary);
+  color: var(--brand-text);
   font-weight: 700;
   text-transform: uppercase;
 }

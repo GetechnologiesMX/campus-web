@@ -79,7 +79,7 @@ main {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   background: var(--ui-color-primary-100);
-  color: var(--ui-primary);
+  color: var(--brand-text);
 }
 
 .nav {

@@ -574,7 +574,7 @@ async function removeLesson() {
 
 .badge-graded {
   background: var(--ui-color-primary-100);
-  color: var(--ui-primary);
+  color: var(--brand-text);
 }
 
 .count {
@@ -640,7 +640,7 @@ async function removeLesson() {
   height: 32px;
   border-radius: var(--brand-radius-sm);
   background: var(--ui-color-primary-100);
-  color: var(--ui-primary);
+  color: var(--brand-text);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -799,7 +799,7 @@ progress::-moz-progress-bar {
 }
 
 .dropzone-link {
-  color: var(--ui-primary);
+  color: var(--brand-text);
   text-decoration: underline;
 }
 
