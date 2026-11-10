@@ -2,7 +2,8 @@
 /**
  * One agreement: its report (seats, codes generated / used / available), the
  * codes (generate, void, export) with who redeemed each and when, the links to
- * share with the employees, and its details.
+ * share with the employees, and its details. From "Quién los usó" a contador
+ * can take the course away from someone (their seat is freed).
  */
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 
@@ -69,7 +70,8 @@ const redeemed = computed(() => codes.value.filter(c => c.redeemed_at)
   .sort((a, b) => b.redeemed_at!.localeCompare(a.redeemed_at!)))
 
 const selected = ref<number[]>([])
-const selectable = computed(() => visible.value.filter(c => c.status !== 'void'))
+const voidable = (code: AgreementCode) => code.status === 'available' || code.status === 'used'
+const selectable = computed(() => visible.value.filter(voidable))
 const allSelected = computed(() => !!selectable.value.length && selectable.value.every(c => selected.value.includes(c.id)))
 function toggleAll() {
   selected.value = allSelected.value ? [] : selectable.value.map(c => c.id)
@@ -96,6 +98,38 @@ async function voidSelected() {
   }
   finally {
     voiding.value = false
+  }
+}
+
+// --- remove access --------------------------------------------------------------------
+
+const revoking = ref<number | null>(null)
+async function revoke(code: AgreementCode) {
+  const question = `¿Quitarle el curso "${code.course_title}" a ${code.username}?\n\n`
+    + 'Pierde el acceso de inmediato y su lugar queda libre para generar otro código. '
+    + 'Si fue un error, tendrás que darle un código nuevo.'
+  if (!window.confirm(question)) return
+  revoking.value = code.id
+  try {
+    const { revoked, pending } = await $fetch<{ revoked: number, pending: number }>(
+      `/api/admin/agreements/${id}/revoke`, { method: 'POST', body: { ids: [code.id] } },
+    )
+    if (!revoked) toast.add({ title: 'Ya no tenía acceso por este código.', color: 'warning' })
+    else if (pending) {
+      toast.add({
+        title: `Se le quitó el acceso a ${code.username} en Campus`,
+        description: 'Open edX no respondió; se reintentará solo. También puedes reintentar desde Ventas.',
+        color: 'warning',
+      })
+    }
+    else toast.add({ title: `Se le quitó el acceso a ${code.username}`, description: 'Su lugar quedó libre.', color: 'success' })
+    await reload()
+  }
+  catch (e) {
+    toast.add({ title: cmsErrors(e).general || 'No se pudo quitar el acceso.', color: 'error' })
+  }
+  finally {
+    revoking.value = null
   }
 }
 
@@ -152,7 +186,7 @@ async function remove() {
 
     <div v-if="!agreement.is_current" class="notice notice-warning rise" role="status">
       {{ agreement.active ? 'Este convenio ya venció' : 'Este convenio está inactivo' }}: nadie puede canjear sus códigos.
-      Quienes ya los canjearon conservan el curso.
+      Quienes ya los canjearon conservan el curso, salvo que les quites el acceso.
     </div>
 
     <!-- Report -->
@@ -160,7 +194,8 @@ async function remove() {
       <StatTile label="Lugares comprados" :value="String(agreement.report.seats)" />
       <StatTile label="Códigos generados" :value="String(agreement.report.generated)"
                 :hint="agreement.report.void ? `${agreement.report.void} anulados` : ''" />
-      <StatTile label="Usados" :value="String(agreement.report.used)" />
+      <StatTile label="Usados" :value="String(agreement.report.used)"
+                :hint="agreement.report.revoked ? `${agreement.report.revoked} con acceso retirado` : ''" />
       <StatTile label="Disponibles" :value="String(agreement.report.available)" />
     </section>
 
@@ -170,7 +205,7 @@ async function remove() {
       <p class="muted panel-intro">
         Formato <code>{{ agreement.code_prefix }}-XXXX-XXXX</code>, sin caracteres que se confundan. Quedan
         <strong>{{ agreement.report.free_seats }}</strong> {{ agreement.report.free_seats === 1 ? 'lugar' : 'lugares' }} sin código
-        (los anulados sin usar no cuentan, así puedes reponerlos).
+        (los anulados sin usar y los de quienes perdieron el acceso no cuentan, así puedes reponerlos).
       </p>
       <form v-if="agreement.report.free_seats" class="generate" novalidate @submit.prevent="generate">
         <div class="field">
@@ -238,9 +273,9 @@ async function remove() {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="code in visible" :key="code.id" :class="{ voided: code.status === 'void' }">
+              <tr v-for="code in visible" :key="code.id" :class="{ voided: code.status === 'void' || code.status === 'revoked' }">
                 <td class="check-col">
-                  <input v-if="code.status !== 'void'" v-model="selected" type="checkbox" :value="code.id" :aria-label="`Seleccionar ${code.code}`">
+                  <input v-if="voidable(code)" v-model="selected" type="checkbox" :value="code.id" :aria-label="`Seleccionar ${code.code}`">
                 </td>
                 <td>
                   <button type="button" class="code" title="Copiar" @click="copy(code.code, 'Código')">{{ code.code }}</button>
@@ -265,13 +300,30 @@ async function remove() {
     <!-- Who used them -->
     <section v-if="redeemed.length" class="admin-panel rise" style="--i: 5">
       <h2>Quién los usó</h2>
-      <p class="muted panel-intro">{{ redeemed.length }} de {{ agreement.report.seats }} lugares, del más reciente al más antiguo.</p>
+      <p class="muted panel-intro">
+        {{ agreement.report.used }} de {{ agreement.report.seats }} lugares con acceso, del más reciente al más antiguo.
+        «Quitar acceso» le quita el curso a esa persona y libera su lugar.
+      </p>
       <ol class="redeemed">
-        <li v-for="code in redeemed" :key="code.id">
+        <li v-for="code in redeemed" :key="code.id" :class="{ revoked: code.status === 'revoked' }">
           <span class="who">{{ code.username }}</span>
           <span class="muted">{{ code.email }}</span>
           <span>{{ code.course_title }}</span>
           <span class="date muted">{{ formatDateTime(code.redeemed_at!) }}</span>
+          <span class="access-col">
+            <template v-if="code.status === 'revoked'">
+              <span class="pill code-revoked">Acceso retirado</span>
+              <span class="muted small">
+                {{ code.revoked_at ? formatDateTime(code.revoked_at) : '' }}{{ code.revoked_by ? ` · ${code.revoked_by}` : '' }}
+              </span>
+              <span v-if="code.access === 'error'" class="small error-text">
+                Open edX aún no lo aplica; se reintentará.
+              </span>
+            </template>
+            <button v-else type="button" class="btn btn-danger btn-small" :disabled="revoking === code.id" @click="revoke(code)">
+              {{ revoking === code.id ? 'Quitando…' : 'Quitar acceso' }}
+            </button>
+          </span>
         </li>
       </ol>
     </section>
@@ -519,6 +571,11 @@ tr.voided .code {
   color: var(--ui-color-neutral-700);
 }
 
+.code-revoked {
+  background: var(--ui-color-warning-50);
+  color: var(--ui-color-warning-800);
+}
+
 .redeemed {
   margin: 0;
   padding: 0;
@@ -527,6 +584,7 @@ tr.voided .code {
 
 .redeemed li {
   display: grid;
+  align-items: center;
   gap: 2px 16px;
   padding: 10px 0;
   border-bottom: 1px solid var(--ui-border);
@@ -539,8 +597,31 @@ tr.voided .code {
 
 @media (min-width: 768px) {
   .redeemed li {
-    grid-template-columns: 160px minmax(0, 1fr) minmax(0, 1fr) auto;
+    grid-template-columns: 160px minmax(0, 1fr) minmax(0, 1fr) auto 150px;
   }
+}
+
+.redeemed li.revoked .who {
+  text-decoration: line-through;
+  color: var(--ui-text-muted);
+}
+
+.access-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+@media (min-width: 768px) {
+  .access-col {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
+.error-text {
+  color: var(--ui-color-error-700);
 }
 
 .details {

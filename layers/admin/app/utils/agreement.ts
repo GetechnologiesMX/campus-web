@@ -2,6 +2,7 @@ export const AGREEMENT_CODE_STATUS: Record<AgreementCodeStatus, string> = {
   available: 'Disponible',
   used: 'Usado',
   void: 'Anulado',
+  revoked: 'Acceso retirado',
 }
 
 /** Characters the CMS allows in a code prefix: no 0/O, 1/I/L. */
@@ -17,7 +18,7 @@ export function redeemUrl(origin: string, courseKey: string) {
   return `${origin}/canjear/${encodeURIComponent(courseKey)}`
 }
 
-export const NO_REVOKE_NOTE = 'Anular un código ya usado, desactivar el convenio o dejar que venza no quita el acceso a quien ya lo canjeó: solo impide canjes nuevos.'
+export const NO_REVOKE_NOTE = 'Anular un código ya usado, desactivar el convenio o dejar que venza no quita el acceso a quien ya lo canjeó: solo impide canjes nuevos. Para quitarle el curso a alguien, usa «Quitar acceso» en «Quién los usó».'
 
 /** Whether the agreement's codes can be redeemed today, as a badge. */
 export function agreementState(agreement: Pick<Agreement, 'active' | 'is_current'>) {

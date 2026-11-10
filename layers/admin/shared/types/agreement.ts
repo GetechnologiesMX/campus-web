@@ -4,10 +4,12 @@ export interface AgreementReport {
   /** Seats the company bought. */
   seats: number
   generated: number
-  /** Codes someone redeemed (also if voided later: they keep the course). */
+  /** Codes someone redeemed and still has the course (also if voided later). */
   used: number
   available: number
   void: number
+  /** Redeemed codes whose access a contador removed: their seats are free again. */
+  revoked: number
   /** Seats without a code yet: how many more can be generated. */
   free_seats: number
 }
@@ -35,7 +37,7 @@ export interface Agreement {
 export type AgreementInput = Pick<Agreement,
   'company' | 'contact_email' | 'products' | 'seats' | 'code_prefix' | 'expires_at' | 'active' | 'notes'>
 
-export type AgreementCodeStatus = 'available' | 'used' | 'void'
+export type AgreementCodeStatus = 'available' | 'used' | 'void' | 'revoked'
 
 export interface AgreementCode {
   id: number
@@ -46,5 +48,10 @@ export interface AgreementCode {
   course_key: string | null
   course_title: string | null
   redeemed_at: string | null
+  /** Access in Open edX of whoever redeemed it; null if nobody did. */
+  access: OrderAccess | null
+  revoked_at: string | null
+  /** Username of the contador who removed the access. */
+  revoked_by: string | null
   created: string
 }

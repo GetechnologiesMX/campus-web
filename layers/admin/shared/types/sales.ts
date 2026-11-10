@@ -46,7 +46,8 @@ export interface SalesStats {
   attention: { access_errors: number, pending: number }
 }
 
-export type OrderStatus = 'pending' | 'paid' | 'failed' | 'refunded'
+/** "cancelled": an agreement order whose access a contador removed. */
+export type OrderStatus = 'pending' | 'paid' | 'failed' | 'refunded' | 'cancelled'
 export type OrderAccess = 'none' | 'granted' | 'revoked' | 'error'
 
 export interface AdminOrder {

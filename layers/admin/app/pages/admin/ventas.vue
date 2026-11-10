@@ -293,6 +293,7 @@ thead th {
 }
 
 .pay-refunded,
+.pay-cancelled,
 .access-revoked {
   background: var(--ui-color-warning-50);
   color: var(--ui-color-warning-800);

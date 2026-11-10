@@ -2,7 +2,7 @@
  * /api/admin/* → CMS /api/v1/*, as the logged-in user. Only the CMS routes the
  * admin uses are forwarded; status codes and error bodies pass through as-is.
  */
-const ALLOWED = /^(me|stats|products(\/\d+(\/(image|create-course|put-on-sale|withdraw|archive))?)?|orders(\/\d+(\/retry-access)?)?|agreements(\/\d+(\/(codes|generate|void|export))?)?)$/
+const ALLOWED = /^(me|stats|products(\/\d+(\/(image|create-course|put-on-sale|withdraw|archive))?)?|orders(\/\d+(\/retry-access)?)?|agreements(\/\d+(\/(codes|generate|void|revoke|export))?)?)$/
 // These make the CMS write to Open edX, which can take a while (Studio republishes the course).
 const OPEN_EDX_WRITES = /\/(image|create-course|retry-access)$/
 

@@ -3,6 +3,7 @@ export const ORDER_STATUS: Record<OrderStatus, string> = {
   paid: 'Pagada',
   failed: 'Fallida',
   refunded: 'Reembolsada',
+  cancelled: 'Cancelada',
 }
 
 export const ORDER_ACCESS: Record<OrderAccess, string> = {
