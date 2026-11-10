@@ -12,6 +12,7 @@ const items = [
   { label: 'Resumen', icon: 'i-lucide-layout-dashboard', to: '/admin', exact: true },
   { label: 'Cursos', icon: 'i-lucide-book-open', to: '/admin/cursos' },
   { label: 'Ventas', icon: 'i-lucide-receipt-text', to: '/admin/ventas' },
+  { label: 'Convenios', icon: 'i-lucide-building-2', to: '/admin/convenios' },
 ]
 const isActive = (item: { to: string, exact?: boolean }) =>
   item.exact ? route.path === item.to : route.path.startsWith(item.to)

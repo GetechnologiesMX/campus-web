@@ -119,7 +119,10 @@ const dateOf = (order: AdminOrder) => order.paid_at ?? order.created
                 <span class="muted small">{{ order.email }}</span>
               </td>
               <td class="course">{{ order.course_title }}</td>
-              <td class="num">{{ money(order.amount) }}</td>
+              <td class="num">
+                {{ money(order.amount) }}
+                <span v-if="order.origin === 'agreement'" class="muted small">Convenio</span>
+              </td>
               <td><span class="pill" :class="`pay-${order.status}`">{{ ORDER_STATUS[order.status] }}</span></td>
               <td class="access">
                 <span class="pill" :class="`access-${order.access}`">

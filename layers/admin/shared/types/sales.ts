@@ -57,6 +57,8 @@ export interface AdminOrder {
   course_title: string
   amount: string
   currency: string
+  /** "agreement": redeemed with a company code (amount 0, billed outside the platform). */
+  origin: 'stripe' | 'agreement'
   status: OrderStatus
   access: OrderAccess
   access_error: string

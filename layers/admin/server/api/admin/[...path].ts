@@ -2,7 +2,7 @@
  * /api/admin/* → CMS /api/v1/*, as the logged-in user. Only the CMS routes the
  * admin uses are forwarded; status codes and error bodies pass through as-is.
  */
-const ALLOWED = /^(me|stats|products(\/\d+(\/(image|create-course|put-on-sale|withdraw|archive))?)?|orders(\/\d+(\/retry-access)?)?)$/
+const ALLOWED = /^(me|stats|products(\/\d+(\/(image|create-course|put-on-sale|withdraw|archive))?)?|orders(\/\d+(\/retry-access)?)?|agreements(\/\d+(\/(codes|generate|void|export))?)?)$/
 // These make the CMS write to Open edX, which can take a while (Studio republishes the course).
 const OPEN_EDX_WRITES = /\/(image|create-course|retry-access)$/
 
@@ -39,6 +39,13 @@ export default defineEventHandler(async (event) => {
 
   setResponseStatus(event, response.status)
   if (response.status === 204) return null
+  // The agreement codes CSV: a download, passed through as the CMS sends it.
+  if (response.ok && response.headers.get('content-type')?.startsWith('text/csv')) {
+    setResponseHeader(event, 'content-type', response.headers.get('content-type')!)
+    const disposition = response.headers.get('content-disposition')
+    if (disposition) setResponseHeader(event, 'content-disposition', disposition)
+    return response.text()
+  }
   const text = await response.text()
   try {
     return JSON.parse(text)

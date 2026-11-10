@@ -111,6 +111,7 @@ const showBuyBar = computed(() => !cardVisible.value && !owned.value && course.v
             <p class="muted terms">Pago único, sin suscripción.</p>
             <a :href="buyUrl" class="btn btn-primary buy">Comprar curso</a>
             <p class="muted note">Si ya lo compraste, te llevaremos directo al curso.</p>
+            <RedeemCode :course-id="id" />
           </template>
           <template v-else>
             <p class="price soon">No disponible</p>
