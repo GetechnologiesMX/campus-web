@@ -60,7 +60,7 @@ const mapLinkUrl = `https://www.openstreetmap.org/?mlat=${contact.lat}&mlon=${co
     <header class="site-header">
       <div class="header-inner">
         <NuxtLink to="/" class="header-logo">
-          <img src="/logo.svg" alt="Campus">
+          <img src="/logo.svg" alt="Auditia">
         </NuxtLink>
 
         <button class="menu-toggle" :aria-expanded="menuOpen" aria-controls="main-nav" @click="menuOpen = !menuOpen">
@@ -111,7 +111,7 @@ const mapLinkUrl = `https://www.openstreetmap.org/?mlat=${contact.lat}&mlon=${co
       <div class="container footer-grid">
         <div class="footer-brand">
           <NuxtLink to="/" class="footer-logo">
-            <img src="/logo.svg" alt="Campus">
+            <img src="/logo.svg" alt="Auditia">
           </NuxtLink>
           <p>Cursos en línea con acceso de por vida.</p>
           <nav class="footer-nav" aria-label="Pie de página">

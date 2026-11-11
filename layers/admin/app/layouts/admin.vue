@@ -44,7 +44,7 @@ const initials = computed(() => (me.value?.username ?? '').slice(0, 2).toUpperCa
     >
       <template #header="{ close }">
         <NuxtLink to="/admin" class="brand">
-          <img src="/logo.svg" alt="Campus" class="brand-logo">
+          <img src="/menu-logo.svg" alt="Auditia" class="brand-logo">
           <span class="brand-tag">Administración</span>
         </NuxtLink>
         <UButton
@@ -155,7 +155,7 @@ main {
 
 .brand-logo {
   display: block;
-  height: 28px;
+  height: 36px;
 }
 
 .brand-tag {
