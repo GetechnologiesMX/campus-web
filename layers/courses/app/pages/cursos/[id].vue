@@ -14,11 +14,28 @@ useSeoMeta({
   ogImage: course.value.image ?? undefined,
 })
 
-// Our /comprar route handles login, asks the CMS for a Stripe checkout and
-// redirects there. If the user already owns the course it sends them into it.
-const buyUrl = `/comprar/${encodeURIComponent(id)}`
+// What it costs now: a discount code the visitor applied, else the running
+// offer, else the list price. The CMS prices it again at checkout.
+const quote = ref<PriceQuote | null>(null)
+const price = computed(() => {
+  const listPrice = course.value!.price
+  if (quote.value) return { now: Number(quote.value.price), before: listPrice, free: quote.value.free, note: '' }
+  const offer = course.value!.offer
+  if (offer) return { now: offer.price, before: listPrice, free: false, note: [offer.name, offerEnds(offer.endsAt)].filter(Boolean).join(' · ') }
+  return { now: listPrice, before: null, free: false, note: '' }
+})
+
+// Our /comprar route handles login, asks the CMS for a Stripe checkout (with
+// the code) and redirects there. If the user already owns the course, or a
+// 100% code gives it to them, it sends them into it.
+const buyUrl = computed(() => {
+  const base = `/comprar/${encodeURIComponent(id)}`
+  return quote.value?.code ? `${base}?codigo=${encodeURIComponent(quote.value.code)}` : base
+})
+const buyLabel = computed(() => price.value.free ? 'Inscribirme gratis' : 'Comprar curso')
 const cancelled = computed(() => route.query.payment === 'cancelled')
 const unavailable = computed(() => route.query.payment === 'unavailable')
+const priceChanged = computed(() => route.query.payment === 'price_changed')
 
 const user = useEdxUser()
 const { data: ownership, refresh: refreshOwnership } = await useFetch(`/api/courses/${encodeURIComponent(id)}/owned`, {
@@ -92,6 +109,9 @@ const showBuyBar = computed(() => !cardVisible.value && !owned.value && course.v
           <div v-if="cancelled" class="notice notice-warning" role="status">
             El pago se canceló. Puedes intentarlo de nuevo cuando quieras.
           </div>
+          <div v-if="priceChanged" class="notice notice-warning" role="status">
+            El precio cambió mientras comprabas (terminó una oferta o se agotó un código). Revisa el precio y vuelve a intentarlo.
+          </div>
           <div v-if="paid && owned" class="notice notice-success" role="status">
             ¡Gracias por tu compra! Ya puedes empezar el curso.
           </div>
@@ -107,10 +127,17 @@ const showBuyBar = computed(() => !cardVisible.value && !owned.value && course.v
             <a :href="courseUrl" class="btn btn-primary buy">Ir al curso</a>
           </template>
           <template v-else-if="course.purchasable">
-            <p class="price">{{ formatPrice(course.price, course.currency) }}</p>
-            <p class="muted terms">Pago único, sin suscripción.</p>
-            <a :href="buyUrl" class="btn btn-primary buy">Comprar curso</a>
+            <p v-if="price.note" class="offer-note">{{ price.note }}</p>
+            <p class="price">
+              {{ price.free ? 'Gratis' : formatPrice(price.now, course.currency) }}
+              <s v-if="price.before != null && price.before !== price.now" class="list-price">
+                <span class="sr-only">Antes</span> {{ formatPrice(price.before, course.currency) }}
+              </s>
+            </p>
+            <p class="muted terms">{{ price.free ? 'Con tu código de descuento.' : 'Pago único, sin suscripción.' }}</p>
+            <a :href="buyUrl" class="btn btn-primary buy">{{ buyLabel }}</a>
             <p class="muted note">Si ya lo compraste, te llevaremos directo al curso.</p>
+            <DiscountCode v-model="quote" :course-id="id" />
             <RedeemCode :course-id="id" />
           </template>
           <template v-else>
@@ -130,8 +157,8 @@ const showBuyBar = computed(() => !cardVisible.value && !owned.value && course.v
 
     <Transition name="bar">
       <div v-if="showBuyBar" class="buy-bar">
-        <span class="price">{{ formatPrice(course.price, course.currency) }}</span>
-        <a :href="buyUrl" class="btn btn-primary">Comprar curso</a>
+        <span class="price">{{ price.free ? 'Gratis' : formatPrice(price.now, course.currency) }}</span>
+        <a :href="buyUrl" class="btn btn-primary">{{ buyLabel }}</a>
       </div>
     </Transition>
   </div>
@@ -259,6 +286,25 @@ h1 {
 
 .price.soon {
   font-size: 1.5rem;
+}
+
+.list-price {
+  margin-left: 6px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ui-text-muted);
+}
+
+.offer-note {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--ui-color-primary-100);
+  color: var(--brand-text);
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .terms {

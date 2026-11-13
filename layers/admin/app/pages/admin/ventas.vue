@@ -122,6 +122,12 @@ const dateOf = (order: AdminOrder) => order.paid_at ?? order.created
               <td class="num">
                 {{ money(order.amount) }}
                 <span v-if="order.origin === 'agreement'" class="muted small">Convenio</span>
+                <span v-else-if="Number(order.discount)" class="muted small">
+                  −{{ money(order.discount) }}
+                  <NuxtLink v-if="order.promotion" :to="`/admin/promociones/${order.promotion}`">
+                    {{ order.promotion_code || 'Oferta' }}
+                  </NuxtLink>
+                </span>
               </td>
               <td><span class="pill" :class="`pay-${order.status}`">{{ ORDER_STATUS[order.status] }}</span></td>
               <td class="access">

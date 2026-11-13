@@ -19,6 +19,8 @@ interface CatalogEntry {
   price: number | null
   currency: string
   on_sale: boolean
+  /** The running offer (CMS promotions); `price` stays the list price. */
+  offer: { name: string, price: number, discount: number, ends_at: string | null } | null
 }
 
 interface EdxCourse {
@@ -61,6 +63,9 @@ function toSummary(entry: CatalogEntry, course?: EdxCourse): CourseSummary {
     price: entry.price,
     currency: entry.currency,
     purchasable: entry.on_sale && !!entry.price,
+    offer: entry.on_sale && entry.offer
+      ? { name: entry.offer.name, price: entry.offer.price, discount: entry.offer.discount, endsAt: entry.offer.ends_at }
+      : null,
   }
 }
 

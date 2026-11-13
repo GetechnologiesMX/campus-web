@@ -12,6 +12,7 @@ const items = [
   { label: 'Resumen', icon: 'i-lucide-layout-dashboard', to: '/admin', exact: true },
   { label: 'Cursos', icon: 'i-lucide-book-open', to: '/admin/cursos' },
   { label: 'Ventas', icon: 'i-lucide-receipt-text', to: '/admin/ventas' },
+  { label: 'Promociones', icon: 'i-lucide-badge-percent', to: '/admin/promociones' },
   { label: 'Convenios', icon: 'i-lucide-building-2', to: '/admin/convenios' },
 ]
 const isActive = (item: { to: string, exact?: boolean }) =>
@@ -471,6 +472,11 @@ main {
 .badge-muted {
   background: var(--ui-border);
   color: var(--ui-text-muted);
+}
+
+.badge-info {
+  background: var(--ui-color-primary-50);
+  color: var(--ui-color-primary-800);
 }
 
 .notice-error {

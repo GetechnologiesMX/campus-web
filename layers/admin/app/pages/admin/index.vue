@@ -85,7 +85,11 @@ const periodText = computed(() => {
           :change="percentChange(t.paid_orders, p.paid_orders)"
           :hint="`${t.buyers} ${t.buyers === 1 ? 'comprador' : 'compradores'}`"
         />
-        <StatTile label="Ticket promedio" :value="money(t.average_order)" />
+        <StatTile
+          label="Ticket promedio"
+          :value="money(t.average_order)"
+          :hint="Number(t.discounts) ? `${money(t.discounts)} en descuentos de promociones` : ''"
+        />
       </section>
 
       <SalesChart :points="stats.series" :granularity="stats.granularity" :from="stats.from" :to="stats.to" />

@@ -10,6 +10,8 @@ export interface SalesTotals {
   refunded_orders: number
   buyers: number
   average_order: string | null
+  /** What promotions took off the list price of the orders paid in the period (also 100% codes). */
+  discounts: string
 }
 
 export interface SalesPoint {
@@ -56,10 +58,20 @@ export interface AdminOrder {
   email: string
   course_key: string
   course_title: string
+  /** What was charged: list price − discount. */
   amount: string
+  /** Price of the course at purchase time (null on old orders and agreement ones). */
+  list_price: string | null
+  discount: string
+  /** Promotion id behind the discount, and the code typed ("" for an offer). */
+  promotion: number | null
+  promotion_code: string
   currency: string
-  /** "agreement": redeemed with a company code (amount 0, billed outside the platform). */
-  origin: 'stripe' | 'agreement'
+  /**
+   * "agreement": redeemed with a company code (amount 0, billed outside the platform).
+   * "promotion": a 100% discount code (amount 0, no payment).
+   */
+  origin: 'stripe' | 'agreement' | 'promotion'
   status: OrderStatus
   access: OrderAccess
   access_error: string

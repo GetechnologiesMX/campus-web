@@ -10,6 +10,13 @@ export function formatPrice(price: number | null, currency: string | null) {
   }).format(price)
 }
 
+/** "Termina el 30 de noviembre" for an offer's end (in Mexico City). */
+export function offerEnds(endsAt: string | null) {
+  if (!endsAt) return ''
+  const day = new Intl.DateTimeFormat('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'long' }).format(new Date(endsAt))
+  return `Termina el ${day}`
+}
+
 export function coursePath(id: string) {
   return `/cursos/${encodeURIComponent(id)}`
 }

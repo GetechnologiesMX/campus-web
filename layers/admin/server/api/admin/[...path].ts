@@ -2,7 +2,7 @@
  * /api/admin/* → CMS /api/v1/*, as the logged-in user. Only the CMS routes the
  * admin uses are forwarded; status codes and error bodies pass through as-is.
  */
-const ALLOWED = /^(me|stats|products(\/\d+(\/(image|create-course|put-on-sale|withdraw|archive))?)?|orders(\/\d+(\/retry-access)?)?|agreements(\/\d+(\/(codes|generate|void|revoke|export))?)?)$/
+const ALLOWED = /^(me|stats|products(\/\d+(\/(image|create-course|put-on-sale|withdraw|archive))?)?|orders(\/\d+(\/retry-access)?)?|agreements(\/\d+(\/(codes|generate|void|revoke|export))?)?|promotions(\/\d+)?)$/
 // These make the CMS write to Open edX, which can take a while (Studio republishes the course).
 const OPEN_EDX_WRITES = /\/(image|create-course|retry-access)$/
 
@@ -32,8 +32,8 @@ export default defineEventHandler(async (event) => {
     body: raw && new Uint8Array(raw),
   }, OPEN_EDX_WRITES.test(path) ? 120_000 : undefined)
 
-  if (response.ok && method !== 'GET' && method !== 'HEAD' && path.startsWith('products')) {
-    // Price, image, copy or sale status may have changed: the catalog must not wait for its cache.
+  if (response.ok && method !== 'GET' && method !== 'HEAD' && (path.startsWith('products') || path.startsWith('promotions'))) {
+    // Price, offer, image, copy or sale status may have changed: the catalog must not wait for its cache.
     await invalidateCatalogCache()
   }
 

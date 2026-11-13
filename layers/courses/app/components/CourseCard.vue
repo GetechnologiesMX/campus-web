@@ -7,13 +7,18 @@ defineProps<{ course: CourseSummary, featured?: boolean }>()
     <div class="cover">
       <img v-if="course.image" :src="course.image" alt="" loading="lazy">
       <span v-else class="cover-fallback" aria-hidden="true">{{ course.org }}</span>
+      <span v-if="course.purchasable && course.offer" class="offer-tag">{{ course.offer.name }}</span>
     </div>
     <div class="body">
       <p class="org">{{ course.org }}</p>
       <h3>{{ course.name }}</h3>
       <p v-if="course.shortDescription" class="muted description">{{ course.shortDescription }}</p>
       <div class="footer">
-        <span v-if="course.purchasable" class="price">{{ formatPrice(course.price, course.currency) }}</span>
+        <span v-if="course.purchasable && course.offer" class="price">
+          {{ formatPrice(course.offer.price, course.currency) }}
+          <s class="list-price"><span class="sr-only">Antes</span> {{ formatPrice(course.price, course.currency) }}</s>
+        </span>
+        <span v-else-if="course.purchasable" class="price">{{ formatPrice(course.price, course.currency) }}</span>
         <span v-else class="muted soon">Próximamente</span>
         <span class="pacing">{{ course.pacing === 'self' ? 'A tu ritmo' : 'Con fechas' }}</span>
       </div>
@@ -118,6 +123,29 @@ h3 {
   font-weight: 700;
   font-size: 1.1rem;
   font-variant-numeric: tabular-nums;
+}
+
+.list-price {
+  margin-left: 4px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ui-text-muted);
+}
+
+.offer-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  max-width: calc(100% - 24px);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ui-color-primary-700);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .soon {
