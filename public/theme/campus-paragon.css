@@ -172,3 +172,37 @@ html:root {
   --pgn-color-form-control-indicator-checked-bg-disabled: color-mix(in srgb, var(--pgn-color-primary-base) 50%, transparent);
   --pgn-color-badge-focus-box-shadow-primary: color-mix(in srgb, var(--pgn-color-primary-base) 5%, transparent);
 }
+
+/*
+ * authn (login/register): the "Start learning with <SITE_NAME>" heading of
+ * its default layouts (base-container/components/default-layout, the only
+ * h1.text-white there) shows the site logo instead. There is no plugin slot
+ * for it, so the text stays for screen readers but is drawn at size 0, and
+ * the logo (../logo.svg, 70×24) is the h1's background.
+ */
+.layout h1.text-white {
+  width: auto;
+  max-width: 100%;
+  height: 48px;
+  aspect-ratio: 70 / 24;
+  background: url('../logo.svg') left center / contain no-repeat;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.layout h1.text-white * {
+  font-size: 0 !important;
+}
+
+@media (min-width: 768px) {
+  .layout h1.text-white {
+    height: 64px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .layout h1.text-white {
+    height: 80px;
+  }
+}
