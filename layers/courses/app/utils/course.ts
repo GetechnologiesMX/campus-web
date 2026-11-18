@@ -20,3 +20,22 @@ export function offerEnds(endsAt: string | null) {
 export function coursePath(id: string) {
   return `/cursos/${encodeURIComponent(id)}`
 }
+
+export type MyCourseStatus = 'upcoming' | 'active' | 'ended'
+
+/** Where the course is in its dates: not started, running or over. */
+export function myCourseStatus(course: Pick<MyCourse, 'start' | 'end'>, now = Date.now()): MyCourseStatus {
+  if (course.start && new Date(course.start).getTime() > now) return 'upcoming'
+  if (course.end && new Date(course.end).getTime() < now) return 'ended'
+  return 'active'
+}
+
+/** "3 de diciembre de 2026" (in Mexico City). */
+export function formatDay(iso: string) {
+  return new Intl.DateTimeFormat('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso))
+}
+
+/** The course in the Open edX learning MFE. */
+export function learningCourseUrl(learningMfeUrl: string, id: string) {
+  return `${learningMfeUrl.replace(/\/$/, '')}/course/${encodeURIComponent(id)}/home`
+}

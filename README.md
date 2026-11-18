@@ -31,6 +31,7 @@ its collection in `content.config.ts`.
 | Course list and details | Nitro server routes (`layers/courses/server/api/courses`), cached 60 s, join two sources: the CMS public catalog (which courses are on sale, title, descriptions, image, price) and the LMS Course API (dates, pacing, effort, owned by Studio). Only CMS courses on sale are listed; archived ones keep their page, marked as no longer for sale. Changes made in `/admin` clear that cache right away. The browser never calls these APIs directly, so no CORS. |
 | "Comprar" button | Plain link to this site's `/comprar/{course_id}` (`layers/courses/server/routes`): sends anonymous users through the LMS login, asks the CMS for a Stripe Checkout as the user and redirects there (or into the course if already owned). Stripe brings them back to the course page, which waits for the access the CMS grants after the payment. |
 | "Already bought" | `GET /api/courses/{id}/owned` asks the LMS enrollment API, with the user's LMS cookies, for an active `verified` enrollment. |
+| "Mis cursos" (`/mis-cursos`) | `GET /api/me/courses` lists the user's active enrollments from the LMS enrollment API (with their LMS cookies), with the title and image from the catalog when the course is in it. `verified` shows as *Adquirido* (bought), any other mode as *Inscrito*. Each course opens in the learning MFE. The Open edX header's "Mis cursos" links here too (`tutor-plugins/campusmenu.py`). |
 | Logged-in user in the header | Reads the `edxloggedin` / `edx-user-info` cookies the LMS sets on the parent domain (`useEdxUser`). The site must be on a subdomain of the LMS cookie domain. |
 | Login / logout | Links to the LMS with `?next=` / `?redirect_url=` back to this site (the plugin's Tutor config whitelists it). |
 | LMS course "About" pages | The plugin redirects them here (`/cursos/{course_id}`). |
@@ -131,7 +132,6 @@ Defaults in `nuxt.config.ts` target the Tutor dev stack. Override per environmen
 |---|---|
 | `NUXT_OPENEDX_LMS_URL` | LMS URL used by the Nuxt server |
 | `NUXT_PUBLIC_LMS_URL` | LMS URL used in browser links |
-| `NUXT_PUBLIC_LEARNER_DASHBOARD_URL` | "Mis cursos" link |
 | `NUXT_PUBLIC_LEARNING_MFE_URL` | Learning MFE base URL |
 | `NUXT_OPENEDX_STUDIO_URL` | Studio URL used by the Nuxt server (course content) |
 | `NUXT_ADMIN_VIDEO_DIR` | Where uploaded videos are stored (default `.data/videos`) |

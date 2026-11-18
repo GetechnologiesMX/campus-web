@@ -68,7 +68,7 @@ const mapLinkUrl = `https://www.openstreetmap.org/?mlat=${contact.lat}&mlon=${co
         </button>
 
         <nav id="main-nav" class="nav" :class="{ open: menuOpen }">
-          <a v-if="user" :href="config.public.learnerDashboardUrl">Mis cursos</a>
+          <NuxtLink v-if="user" to="/mis-cursos">Mis cursos</NuxtLink>
           <NuxtLink to="/cursos">Cursos</NuxtLink>
           <NuxtLink to="/eventos">Eventos</NuxtLink>
           <NuxtLink v-if="user && cmsMe?.is_contador" to="/admin">Administración</NuxtLink>

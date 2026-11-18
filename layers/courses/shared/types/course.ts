@@ -39,6 +39,24 @@ export interface PriceQuote {
   promotion: { name: string, kind: 'offer' | 'code', ends_at: string | null } | null
 }
 
+/** A course the logged-in user is enrolled in (`/api/me/courses`). */
+export interface MyCourse {
+  id: string
+  name: string
+  org: string
+  number: string
+  image: string | null
+  /** ISO dates from Open edX, or null. */
+  start: string | null
+  end: string | null
+  pacing: 'self' | 'instructor' | string
+  /** Bought on Campus (verified enrollment); otherwise given by the team. */
+  purchased: boolean
+  enrolledAt: string | null
+  /** Has a page in the Campus catalog (/cursos/{id}). */
+  inCatalog: boolean
+}
+
 export interface CourseDetail extends CourseSummary {
   /** Plain text written by the accountant in the CMS; blank lines separate paragraphs. */
   description: string
